@@ -17,5 +17,10 @@ int main(){
 	char * chr = malloc(numBytes*sizeof(char));
 	syscall(callNo-1,36, chr, blockNum, offset);
 	printf("Text read from disk:  %s \n", chr);
+
+	printf("User1: Making sys call read_disk 2\n");
+	chr = malloc(numBytes*sizeof(char));
+	syscall(callNo-1,36, chr, blockNum, offset);
+	printf("Text read from disk 1:  %s \n", chr);
 	return 0;
 }
