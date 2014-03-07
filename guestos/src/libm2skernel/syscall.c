@@ -874,6 +874,8 @@ int handle_guest_syscalls() {
 	if(garbage == 1){
 		printf("\nWarning: Space not being used by any user. Reading garbage data..\n");
 	}
+
+    // printf("IDHAR AAYA \n\n");
 	
 	char * buf;
 	buf = malloc(numBytes * sizeof(char));
@@ -896,7 +898,8 @@ int handle_guest_syscalls() {
     /*ckeck for blocking*/
         struct io_interrupt * str_io = malloc(sizeof(struct io_interrupt));
         // count the n umber of instructions to skip
-        int skipInstr = numBlocksSpanned * 100;
+        // printf("%d num blocks jhjkhjkhk \n\n", numBlocksSpanned);
+        long long skipInstr = numBlocksSpanned * 100000000;
         str_io->instNumber = instr_number + skipInstr;
         str_io->context = isa_ctx;
         ke_list_insert_tail(ke_list_suspended, isa_ctx);
@@ -963,6 +966,18 @@ int handle_guest_syscalls() {
 	
 	printf("Message: write successfull!\n");
         retval=403;
+
+        /*ckeck for blocking*/
+        struct io_interrupt * str_io = malloc(sizeof(struct io_interrupt));
+        // count the n umber of instructions to skip
+        // printf("%d num blocks jhjkhjkhk \n\n", numBlocksSpanned);
+        long long  skipInstr = numBlocksSpanned * 100000000;
+        // printf("%d hey there\n\n", skipInstr);
+        str_io->instNumber = instr_number + skipInstr;
+        str_io->context = isa_ctx;
+        ke_list_insert_tail(ke_list_suspended, isa_ctx);
+        ke_list_remove(ke_list_running,isa_ctx);
+        push_ioqueue(str_io);
         break;
     }
 
@@ -976,17 +991,6 @@ int handle_guest_syscalls() {
             }
 
     }
-
-     /*ckeck for blocking*/
-        struct io_interrupt * str_io = malloc(sizeof(struct io_interrupt));
-        // count the n umber of instructions to skip
-        int skipInstr = numBlocksSpanned * 100;
-        str_io->instNumber = instr_number + skipInstr;
-        str_io->context = isa_ctx;
-        ke_list_insert_tail(ke_list_suspended, isa_ctx);
-        ke_list_remove(ke_list_running,isa_ctx);
-        push_ioqueue(str_io);
-        break;
 
 	return retval;
 }
