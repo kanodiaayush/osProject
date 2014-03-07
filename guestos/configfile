@@ -1,0 +1,10 @@
+
+[ Context 0 ]
+Exe = r
+
+Uid = 1
+
+[ Context 1 ]
+Exe = rw
+
+Uid = 2
