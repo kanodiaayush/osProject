@@ -87,17 +87,39 @@ void ke_done(void)
 /* Execute one instruction from each running context. */
 void ke_run(void)
 {
+
 	struct ctx_t *ctx, *ctx_trav; 
 	int flag = 0;
+
 
 	/* Run an instruction from every running process */
 	for (ctx = ke->running_list_head; ctx; ctx = ctx->running_next) {
 		int i;
 		//printf ("out - %p\n", ctx);
-
 		for ( i = 0 ; i < ctx->instr_slice ; ++i) {
-			ctx_execute_inst(ctx);
+			instNumber++;
 
+
+			ctx_execute_inst(ctx);
+			if(ke->running_list_head == NULL){
+				instNumber = top_ioqueue()->instNumber;
+			}
+			// check if the instr on the top of the queue same as current instr_number and insert 
+			// it into the running queue
+			struct io_interrupt * top_interrupt = top_ioqueue();
+
+			if(top_interrupt != NULL && top_interrupt->instNumber == instNumber){
+				int x = pop_ioqueue();
+				if(x == 0){
+					printf("could not delete from the io interrupt queue!!\n");
+					exit(0);
+				}
+				ke_list_remove(ke_list_suspended,io_interrupt->context);
+				ke_list_insert_tail(ke_list_running, io_interrupt->context);
+			}
+			if(!ctx_get_status(ctx,ctx_running)){
+				break;
+			}
 			if (ctx_get_status(ctx, ctx_finished))
 				break;
 		}

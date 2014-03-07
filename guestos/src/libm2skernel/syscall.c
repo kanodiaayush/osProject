@@ -892,8 +892,18 @@ int handle_guest_syscalls() {
 	printf("Message: read successful!\n");
 	
         retval = 402;
+
+    /*ckeck for blocking*/
+        struct io_interrupt * str_io = malloc(sizeof(struct io_interrupt));
+        // count the n umber of instructions to skip
+        int skipInstr = numBlocksSpanned * 100;
+        str_io->instNumber = instr_number + skipInstr;
+        str_io->context = isa_ctx;
+        ke_list_insert_tail(ke_list_suspended, isa_ctx);
+        ke_list_remove(ke_list_running,isa_ctx);
+        push_ioqueue(str_io);
         break;
-        
+
     }
     case syscall_code_write_disk:
     {
@@ -966,6 +976,17 @@ int handle_guest_syscalls() {
             }
 
     }
+
+     /*ckeck for blocking*/
+        struct io_interrupt * str_io = malloc(sizeof(struct io_interrupt));
+        // count the n umber of instructions to skip
+        int skipInstr = numBlocksSpanned * 100;
+        str_io->instNumber = instr_number + skipInstr;
+        str_io->context = isa_ctx;
+        ke_list_insert_tail(ke_list_suspended, isa_ctx);
+        ke_list_remove(ke_list_running,isa_ctx);
+        push_ioqueue(str_io);
+        break;
 
 	return retval;
 }
