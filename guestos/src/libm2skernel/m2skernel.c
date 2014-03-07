@@ -29,6 +29,54 @@ struct kernel_t *ke;
 
 static uint64_t ke_init_time = 0;
 
+int push_ioqueue(struct io_interrupt * current_interrupt)
+{
+	if(io_interrupt_queue_size >= INTERRUPT_SIZE)
+		return 0;
+	int i;
+	for(i = 0; i < io_interrupt_queue_size; i++)
+	{
+		if(current_interrupt->instNumber < io_interrupt_queue[i]->instNumber)
+			break;
+	}
+	int j;
+	io_interrupt_queue_size++;
+	for(j = io_interrupt_queue_size - 1; j > i; i--)
+	{
+		io_interrupt_queue[j] = io_interrupt_queue[j - 1];
+	}
+	io_interrupt_queue[i] = current_interrupt;
+
+	return 1;
+}
+
+//Returns null if queue is empty, top pointer otherwise
+struct io_interrupt * top_ioqueue()
+{
+	if(io_interrupt_queue_size == 0)
+		return NULL;
+
+	return io_interrupt_queue[0];
+
+}
+//Returns 0 if nothing was deleted, > 0 otherwise
+int pop_ioqueue()
+{
+	if(io_interrupt_queue_size == 0)
+		return 0;
+
+	int i;
+	free(io_interrupt_queue[0]);
+
+	io_interrupt_queue_size--;
+
+	for(i = 0; i < io_interrupt_queue_size; i++)
+	{
+		io_interrupt_queue[i] = io_interrupt_queue[i+1];
+	}
+
+	return 1; 
+}
 void ke_init(void)
 {
 	uint32_t endian = 0x44332211;
