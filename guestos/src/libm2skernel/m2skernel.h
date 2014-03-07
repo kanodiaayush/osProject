@@ -20,6 +20,8 @@
 #ifndef M2SKERNEL_H
 #define M2SKERNEL_H
 
+#define INTERRUPT_SIZE 10000
+
 #include <mhandle.h>
 #include <debug.h>
 #include <config.h>
@@ -52,11 +54,28 @@ int * userBlockMap;
 int totalBlocks;
 int myblockSize;
 
-long long instr_number = 0;
+long long instr_number;
 struct io_interrupt{
 	int instNumber;
-	ctx_t * context;
+	struct ctx_t * context;
 };
+
+//Making the interrupted process event list
+//This is a queue
+//Functions supported:
+//Insert in queue
+//Delete first element
+//See first element
+
+struct io_interrupt ** io_interrupt_queue;
+
+int io_interrupt_queue_size;
+//Pushes into queue, returns 0 if failure, 1 on success
+int push_ioqueue(struct io_interrupt * current_interrupt);
+struct io_interrupt * top_ioqueue();
+int pop_ioqueue();
+
+//
 
 
 
@@ -128,7 +147,7 @@ void mem_map(struct mem_t *mem, uint32_t addr, int size, enum mem_access_enum pe
 void mem_unmap(struct mem_t *mem, uint32_t addr, int size);
 
 void mem_map_host(struct mem_t *mem, struct fd_t *fd, uint32_t addr,
-	int size, enum mem_access_enum perm, void *data);
+		int size, enum mem_access_enum perm, void *data);
 void mem_unmap_host(struct mem_t *mem, uint32_t addr);
 
 void mem_protect(struct mem_t *mem, uint32_t addr, int size, enum mem_access_enum perm);
@@ -151,7 +170,7 @@ void mem_load(struct mem_t *mem, char *filename, uint32_t start);
 /* Registers */
 
 struct regs_t {
-	
+
 	/* Integer registers */
 	uint32_t eax, ecx, edx, ebx;
 	uint32_t esp, ebp, esi, edi;
@@ -194,7 +213,7 @@ struct elf_symbol_t {
 
 
 struct elf_file_t {
-	
+
 	/* ELF file */
 	FILE *f;
 	char path[MAX_PATH_SIZE];
@@ -221,7 +240,7 @@ void elf_free_buffer(void *buf);
 
 int elf_section_count(struct elf_file_t *f);
 int elf_section_info(struct elf_file_t *f, int section,
-	char **pname, uint32_t *paddr, uint32_t *psize, uint32_t *pflags);
+		char **pname, uint32_t *paddr, uint32_t *psize, uint32_t *pflags);
 void *elf_section_read(struct elf_file_t *f, int section);
 void *elf_section_read_offset(struct elf_file_t *f, int section, uint32_t offset, uint32_t size);
 
@@ -241,7 +260,7 @@ int elf_merge_symtab(struct elf_file_t *f, struct elf_file_t *src);
 /* Program loader */
 
 struct loader_t {
-	
+
 	/* Program data */
 	struct elf_file_t *elf;
 	struct lnlist_t *args;
@@ -403,9 +422,9 @@ struct signal_handlers_t {
 		uint32_t flags;
 		uint32_t restorer;
 		uint64_t mask;
-///////****************************************************/
+		///////****************************************************/
 		void (*sig_handler_pointer)(void);
-/*********************************************************** */
+		/*********************************************************** */
 	} sigaction[64];
 };
 
@@ -474,7 +493,7 @@ int fdt_get_guest_fd(struct fdt_t *fdt, int host_fd);
 extern int ctx_debug_category;
 
 struct ctx_t {
-	
+
 	/* Context properties */
 	int status;
 	int pid;  /* Context id */
@@ -615,7 +634,7 @@ struct kernel_t {
 	/* Counter of times that a context has been suspended in a
 	 * futex. Used for FIFO wakeups. */
 	uint64_t futex_sleep_count;
-	
+
 	/* Flag set when any context changes any status other than 'specmode' */
 	int context_reschedule;
 
