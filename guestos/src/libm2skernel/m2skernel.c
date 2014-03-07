@@ -41,7 +41,7 @@ int push_ioqueue(struct io_interrupt * current_interrupt)
 	}
 	int j;
 	io_interrupt_queue_size++;
-	for(j = io_interrupt_queue_size - 1; j > i; i--)
+	for(j = io_interrupt_queue_size - 1; j > i; j--)
 	{
 		io_interrupt_queue[j] = io_interrupt_queue[j - 1];
 	}
@@ -146,21 +146,17 @@ void ke_run(void)
 		//printf ("out - %p\n", ctx);
 		for ( i = 0 ; i < ctx->instr_slice ; ++i) {
 			instr_number++;
-
-
 			ctx_execute_inst(ctx);
 			if(ke->running_list_head == NULL){
 				// printf("NULL ho gya\n\n");
 				if(top_ioqueue() != NULL){
 					instr_number = top_ioqueue()->instNumber;	
-				}
-				
+				}	
 			}
 			// check if the instr on the top of the queue same as current instr_number and insert 
 			// it into the running queue
 			struct io_interrupt * top_interrupt = top_ioqueue();
-
-			if(top_interrupt != NULL && top_interrupt->instNumber == instr_number){
+			while(top_interrupt != NULL && top_interrupt->instNumber == instr_number){
 				int x = pop_ioqueue();
 				if(x == 0){
 					printf("could not delete from the io interrupt queue!!\n");
@@ -168,6 +164,7 @@ void ke_run(void)
 				}
 				ke_list_remove(ke_list_suspended,top_interrupt->context);
 				ke_list_insert_tail(ke_list_running, top_interrupt->context);
+				top_interrupt=top_ioqueue();
 			}
 			if(!ctx_get_status(ctx,ctx_running)){
 				break;

@@ -97,11 +97,11 @@ DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /users/ug11/ashu/6semester/os/osProject/guestos/missing --run aclocal-1.11
-AMTAR = ${SHELL} /users/ug11/ashu/6semester/os/osProject/guestos/missing --run tar
-AUTOCONF = ${SHELL} /users/ug11/ashu/6semester/os/osProject/guestos/missing --run autoconf
-AUTOHEADER = ${SHELL} /users/ug11/ashu/6semester/os/osProject/guestos/missing --run autoheader
-AUTOMAKE = ${SHELL} /users/ug11/ashu/6semester/os/osProject/guestos/missing --run automake-1.11
+ACLOCAL = ${SHELL} /users/ug11/navinchandak/os/osProject/guestos/missing --run aclocal-1.11
+AMTAR = ${SHELL} /users/ug11/navinchandak/os/osProject/guestos/missing --run tar
+AUTOCONF = ${SHELL} /users/ug11/navinchandak/os/osProject/guestos/missing --run autoconf
+AUTOHEADER = ${SHELL} /users/ug11/navinchandak/os/osProject/guestos/missing --run autoheader
+AUTOMAKE = ${SHELL} /users/ug11/navinchandak/os/osProject/guestos/missing --run automake-1.11
 AWK = gawk
 CC = gcc-4.4.3
 CCDEPMODE = depmode=gcc3
@@ -129,7 +129,7 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /users/ug11/ashu/6semester/os/osProject/guestos/missing --run makeinfo
+MAKEINFO = ${SHELL} /users/ug11/navinchandak/os/osProject/guestos/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = multi2sim
@@ -145,10 +145,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 3.0.2
-abs_builddir = /users/ug11/ashu/6semester/os/osProject/guestos
-abs_srcdir = /users/ug11/ashu/6semester/os/osProject/guestos
-abs_top_builddir = /users/ug11/ashu/6semester/os/osProject/guestos
-abs_top_srcdir = /users/ug11/ashu/6semester/os/osProject/guestos
+abs_builddir = /users/ug11/navinchandak/os/osProject/guestos
+abs_srcdir = /users/ug11/navinchandak/os/osProject/guestos
+abs_top_builddir = /users/ug11/navinchandak/os/osProject/guestos
+abs_top_srcdir = /users/ug11/navinchandak/os/osProject/guestos
 ac_ct_CC = gcc-4.4.3
 ac_ct_CXX = g++
 am__include = include
@@ -168,7 +168,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /users/ug11/ashu/6semester/os/osProject/guestos/install-sh
+install_sh = ${SHELL} /users/ug11/navinchandak/os/osProject/guestos/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -211,12 +211,8 @@ EXTRA_DIST = \
 	tools/m2s-pipeline/m2s-pipeline.c \
 	tools/m2s-pipeline/Makefile
 
-all: all-recursive my_files
+all: all-recursive
 
-my_files: read.c read_and_write.c 5_a_1.cpp
-	g++-4.4.3 -m32 -static 5_a_1.cpp -o testit2
-	gcc-4.4.3 -m32 -static read.c -o testit
-	gcc-4.4.3 -m32 -static read_and_write.c -o testit1
 .SUFFIXES:
 am--refresh:
 	@:
