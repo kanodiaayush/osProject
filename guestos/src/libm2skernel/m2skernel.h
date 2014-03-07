@@ -52,6 +52,14 @@ int * userBlockMap;
 int totalBlocks;
 int myblockSize;
 
+long long instr_number;
+struct io_interrupt{
+	int instNumber;
+	ctx_t * context;
+};
+
+
+
 /* Maximum length for paths */
 #define MAX_PATH_SIZE  200
 

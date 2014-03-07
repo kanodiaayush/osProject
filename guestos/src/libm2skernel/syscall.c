@@ -893,6 +893,7 @@ int handle_guest_syscalls() {
 	
         retval = 402;
         break;
+        
     }
     case syscall_code_write_disk:
     {
