@@ -52,7 +52,7 @@ int * userBlockMap;
 int totalBlocks;
 int myblockSize;
 
-long long instr_number;
+long long instr_number = 0;
 struct io_interrupt{
 	int instNumber;
 	ctx_t * context;
